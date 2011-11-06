@@ -1,0 +1,113 @@
+@CHARSET "UTF-8";
+/*Begin Main*/
+body, html {
+  margin:0;
+  padding:0;
+  background:#ffffff;
+  }
+body, table, textarea {
+  font-family: Arial, Tahoma, Verdana, Helvetica, Sans-serif;
+  font-size: 14px;  
+  }
+table.maintable {
+  width: 100%;
+  }
+td.mainbody{
+  border: #eeeeee 1px solid;
+}
+.mes{
+  font-size:12px;
+  color: green;
+  }
+.err{
+  font-size:12px;
+  color: red;
+  }
+.red_star{
+  color: red;
+  }
+
+/*Begin forms*/
+input.big_input{
+  background: #EEEEEE;
+  font-family: Verdana, Tahoma, Arial, sans-serif;
+  font-size: 15pt;
+  border: solid 1px #111111;
+  color: #000000;
+  height: 27px;
+}
+input.big_input:focus {
+  background-color: #FFFFFF;
+  font-size: 15pt;
+  height: 27px;
+}
+button.big_button,input.big_button{
+  font-size: 15pt;
+  background: #F5F5F5;
+  border: 1px solid black;
+  height: 27px;
+  white-space:nowrap;
+}
+label.form{
+  font:normal normal 13px Arial;
+  color:#000000;
+  margin-bottom:5px;
+}
+
+/*stats*/
+.lnk{
+  cursor: pointer;
+  text-decoration:underline;
+}
+.selected{
+  background-color: #FCFDC2;
+  padding:5px;
+}
+div.selected{
+  background-color: #FCFDC2;
+  padding:0px;
+}
+
+.header, .line{
+  width: 340px;
+}
+.cell{
+  float: left;
+  overflow:hidden;
+  white-space:nowrap;
+  padding:5px;
+}
+.cell{
+  text-align: center;   
+}
+div.line:hover{
+  background-color: #FCFDC2;
+  cursor: pointer;
+}
+div.line:hover label{
+  cursor: pointer;
+}
+label.sum{
+  background-color:#C2E8FD;
+  margin-bottom:1px;
+}
+label.new{
+  background-color:#C6FDC2;
+  margin-bottom:1px; 
+}
+label.un{
+  background-color:#FDE2C2;
+}
+.cell label{
+  display:block;
+}
+
+span.sum{
+  color:#008BD7;
+}
+span.new{
+  color:#0DAB00; 
+}
+span.un{
+  color:#AB2C00;
+}

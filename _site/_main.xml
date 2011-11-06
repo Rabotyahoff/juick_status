@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<!--
+		Ситемные права
+		root - полные права
+		admin - администратор
+		_unloggined_- только для незалогиненых юзеров - НЕ описывается в rights
+		
+		Права можно указать для любой ноды в аттрибуте rights через запятую
+		rights="admin, user, _unloggined_"
+		Если права не указаны, значит доступна всем
+		Если указаны пустые права rights="", то нода доступна всем залогиненым юзерам
+		Права root можно не указывать
+	-->
+	<rights>
+		<item>root</item>		
+		<item>admin</item>		
+	</rights>
+	
+	<pages>
+		<!-- если rights для страницы не указаны, то контроля прав нет. 
+		Если rights пуст, то доступ всем залогиненым пользователям -->
+		<!-- может быть несколько экранов с одинаковым screen, но разными правами -->
+		
+		<item screen="404">
+			<!-- системный экран -->
+			<title>404</title>
+			<theme>404.xsl</theme>
+			<handlers>
+				<content>p_404</content>
+			</handlers>
+		</item>		
+		
+		<!-- Begin для не залогиненых юзеров -->
+		<item screen="" name="main">
+			<!-- можно задать редирект на любой путь -->
+			<!--<redirect>/somescreen1/somescreen2</redirect>-->
+			<title>Juick Status</title>
+			<description></description>
+			<keywords></keywords>
+			<theme>index/main.xsl</theme>
+			<!-- Обработчики. В общем может и не быть -->
+			<!-- В обработчиках можно указывать путь -->
+			<handlers>
+				<!-- Главный обработчик -->
+				<content>p_status</content>
+				<header xsl="header.xsl">h_static</header>
+				<footer xsl="footer.xsl">h_static</footer>
+				<menu_top>h_menu</menu_top>
+			</handlers>
+		</item>
+		
+		<item screen="stats" parent="main">
+			<title>Juick Statistic</title>
+			<handlers>
+				<!-- Главный обработчик -->
+				<content>p_stats</content>
+			</handlers>			
+		</item>
+		
+		<item screen="show" ajax="1">
+			<!-- запросы картинок. Все запросы автоматом становятся аяксовыми -->
+			<handlers>
+				<content>p_show</content>
+			</handlers>     
+		</item>
+		
+		<item screen="api" ajax="1">
+			<!-- запросы к api. Все запросы автоматом становятся аяксовыми -->
+			<handlers>
+				<content>p_api</content>
+			</handlers>     
+		</item>
+	</pages>
+	
+	<menus>    
+		<menu_top>
+			<title></title>
+			<xsl>menu_top.xsl</xsl>
+			
+			<item pos="0">
+				<title>RA-project</title>
+				<link>http://ra-project.net</link>
+			</item>
+			
+			<item pos="10">
+				<title>juick status</title>
+				<link>/</link>
+			</item>
+			
+			<item pos="20">
+				<title>statistic</title>
+				<link>/stats</link>
+			</item>
+			     
+		</menu_top>
+	</menus>
+
+</site>

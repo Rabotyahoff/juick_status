@@ -1,0 +1,20 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteBase /
+RewriteRule ^.htaccess$ - [F]
+RewriteRule ^(.*)res/(.*)$  - [S=100]
+RewriteRule ^(.*)themes/(.*)$  - [S=100]
+
+# для картинок
+RewriteRule ^([^/]+)\.(gif|jpg|png)$ show?login=$1&ext=$2&bg=EEEEDF
+RewriteRule ^([^/]+)\/([^/]+)\.(gif|jpg|png)$ show?login=$2&ext=$3&bg=$1
+
+# основное
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule	^(.+)$		index.php?page=$1 [L,QSA]
+
+<Files "_*.xml">
+  deny from all
+</Files>

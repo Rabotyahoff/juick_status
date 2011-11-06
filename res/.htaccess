@@ -1,0 +1,8 @@
+<IfModule mod_headers.c>
+  Header  append Cache-Control "public"
+</IfModule>
+# Заголовок Expires
+<IfModule mod_expires.c>
+  ExpiresActive  On
+  ExpiresDefault  "access plus 24 hours"
+</IfModule>

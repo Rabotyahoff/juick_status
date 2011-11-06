@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>	
+	<site>
+		<name>Juick Status</name>
+		<root_url>http://juick_xml.ra-project.my/</root_url>
+		<version>1.0</version>
+		<date>2011.10.12</date>
+	</site>
+	
+	<engine>
+		<root_url>http://_xml_engine1.my/</root_url>		
+	</engine>	
+	
+	<cache_time>0</cache_time>
+	<enable_cache>1</enable_cache>  
+	<memcache>
+		<host>127.0.0.1</host>
+		<port>11211</port>
+	</memcache>	
+	
+	<databases>
+		<item id="main">
+			<host>localhost</host>
+			<name>juick_stats</name>
+			<user>root</user>
+			<password></password>
+		</item>		
+	</databases>
+	
+	<emails>
+		<admin>rabotyahoff@gmail.com</admin>
+	</emails>
+	
+	<formats>
+		<date>d.m.Y</date>
+		<date_sql>%d.%m.%Y</date_sql>
+		<time>H:i</time>
+		<time_sql>%H:%i</time_sql>
+	</formats>	
+</settings>

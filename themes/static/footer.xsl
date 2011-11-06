@@ -14,7 +14,7 @@
 			<br/>-->
 			Предложения и пожелания по работе сервиса направлять сюда <a href="http://juick.com/RA"><b>PM @RA</b></a>
 			<br/> 
-			Проект на github
+			Проект на <a href="https://github.com/Rabotyahoff/juick_status">github</a>
 		</div>
 		
 		<center>

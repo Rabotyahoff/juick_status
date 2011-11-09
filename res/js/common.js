@@ -104,12 +104,12 @@ var cur_page = {
     var tmp_h1=this.height0-15;
     var tmp_h=Math.floor(tmp_h1/10)*10+1;
     var tmp_p=tmp_h1-tmp_h;
-    $('#id_div_post').css('height', tmp_h+'px').css('margin-bottom', tmp_p+'px'); 
     
-    var jobj = $("#id_user_text");
+    var jobj = $("#id_div_post");
+    jobj.css('height', tmp_h+'px').css('margin-bottom', tmp_p+'px');
     var color_="#000000";
     if (rr0 + gg0 + bb0 <= 300) color_="#FFFFFF";
-    jobj.css('color', color_).css('width', (this.width0-32-5-4)+'px').css('height', (this.height0-7-12)+'px');    
+    jobj.css('color', color_);    
   
     var login=this.get_login(true);  
     $("#id_lnk_stats").attr('href', '/stats#'+login).css('display', '');

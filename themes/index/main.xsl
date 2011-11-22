@@ -20,7 +20,7 @@
   		
   		<link rel="stylesheet" type="text/css" href="{$res_site_url}css/main.css" />
   		
-  		<script src="{$res_engine_url}js/jquery-1.4.2.min.js"></script>
+  		<script src="{$res_engine_url}js/jquery.min.js"></script>
   		<script src="{$res_engine_url}js/utils.js"></script>
   	</head>  	
   	

@@ -71,6 +71,13 @@
 				<content>p_api</content>
 			</handlers>     
 		</item>
+		
+		<item screen="cron" ajax="1">
+			<!-- запросы к api. Все запросы автоматом становятся аяксовыми -->
+			<handlers>
+				<content>p_cron</content>
+			</handlers>     
+		</item>
 	</pages>
 	
 	<menus>    

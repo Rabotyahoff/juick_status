@@ -1,0 +1,2 @@
+http://code.google.com/p/xmpphp/
+xmpphp-0.1rc2-r77.tgz

@@ -36,5 +36,17 @@
 		<date_sql>%d.%m.%Y</date_sql>
 		<time>H:i</time>
 		<time_sql>%H:%i</time_sql>
-	</formats>	
+	</formats>
+
+	<juick_account>
+		<login>juicklogin</login>
+		<password>juickpassword</password>
+		<server>gmail.com</server>
+		<host>talk.google.com</host>
+		<resource>xmpphp</resource>
+		<ssl>1</ssl>
+		<port>5223</port>
+		<!--<ssl>0</ssl>
+		<port>5222</port>-->
+	</juick_account>
 </settings>

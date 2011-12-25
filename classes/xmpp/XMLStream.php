@@ -146,7 +146,7 @@ class XMPPHP_XMLStream {
 	/**
 	 * @var boolean
 	 */
-	protected $reconnect = true;
+	protected $reconnect = false;
 	/**
 	 * @var boolean
 	 */
@@ -432,6 +432,7 @@ class XMPPHP_XMLStream {
 					}
 				}
 				$this->log->log("RECV: $buff",  XMPPHP_Log::LEVEL_VERBOSE);
+//die;
 				xml_parse($this->parser, $buff, false);
 			} else {
 				# $updated == 0 means no changes during timeout.

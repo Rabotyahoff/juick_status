@@ -1,0 +1,49 @@
+--
+-- Структура таблицы `friends`
+--
+
+CREATE TABLE `friends` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `date` date NOT NULL,
+  `friends` text NOT NULL COMMENT 'на кого подписан',
+  `subscribers` text NOT NULL COMMENT 'кто на него подписан',
+  PRIMARY KEY  (`uid`,`date`),
+  KEY `date` (`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `messages`
+--
+
+CREATE TABLE `messages` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `mid` mediumint(8) unsigned NOT NULL,
+  `date` datetime default NULL,
+  `tags` varchar(255) NOT NULL,
+  `body` varchar(255) NOT NULL,
+  `date_import` datetime NOT NULL,
+  PRIMARY KEY  (`uid`,`mid`),
+  KEY `date` (`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users`
+--
+
+CREATE TABLE `users` (
+  `uname` varchar(255) NOT NULL,
+  `uid` mediumint(8) unsigned default NULL,
+  `first_date` datetime default NULL,
+  `last_date` datetime default NULL,
+  `last_friends` datetime NOT NULL,
+  `last_messages` datetime NOT NULL,
+  `count_show` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`uname`),
+  KEY `uid` (`uid`),
+  KEY `last_friends` (`last_friends`),
+  KEY `last_messages` (`last_messages`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

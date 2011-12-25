@@ -11,11 +11,18 @@ load_class_local('c_juick');
 
 class s_read_uids extends a_sub_handler_ra {
 
+	/**
+	 *
+	 * @var p_cron
+	 */
+	public $handler;
+	protected $limit=100;
+
 	protected $max_users_in_block=20;
 
 	function delete_old_records(){
 		$sql="DELETE FROM users
-					WHERE TIMESTAMPDIFF(MONTH,last_date,first_date)>0 and  uid is NULL AND uname<>''";
+					WHERE TIMESTAMPDIFF(MONTH,last_date,first_date)>0 AND  (uid is NULL OR uname<>'')";
 		$this->db->db_query($sql);
 	}
 
@@ -35,27 +42,40 @@ class s_read_uids extends a_sub_handler_ra {
 		return true;
 	}
 
-	function read_uids(){
-		$this->delete_old_records();
-
+	function get_unames(){
 		$sql="SELECT
 						uname
 					FROM users
 					WHERE uid is NULL
-						AND uname<>''";
+						AND uname<>''
+		      LIMIT ".$this->limit;
 		$res=$this->db->get_array($sql);
+
+		return $res;
+	}
+
+	function delete_unames($s_unames){
+		$sql="DELETE FROM users WHERE uname IN (".implode(',',$s_unames).")";
+		$this->db->db_query($sql);
+	}
+
+	function read_uids(){
+		$this->delete_old_records();
+
+		$res=$this->get_unames();
 
 		if ($_REQUEST['debug_cron']==1){
 			print_r($res);
 		}
 		if (empty($res)){
 			echo 'empty list.';
-			return;
+			exit;
 		}
 
 		$block_users=array();
 		$cur_block=0;
 		$s_unames=array();
+		$s_bad_names=array();
 		foreach ($res as $itm){
 			$uname=$itm['uname'];
 			$s_uname=tosql($uname);
@@ -65,13 +85,20 @@ class s_read_uids extends a_sub_handler_ra {
 				if (count($block_users[$cur_block])>=$this->max_users_in_block){
 				  $cur_block++;
 				}
-				$s_unames[]=$s_uname;
+				$s_unames[$uname]=$s_uname;
 		  }
+		  else {
+		  	$s_bad_names[]=$s_uname;
+		  }
+		}
+
+		if (!empty($s_bad_names)){
+			$this->delete_unames($s_bad_names);
 		}
 
 		if (empty($s_unames)){
 			echo 'no valid logins.';
-			return;
+			exit;
 		}
 
 		$sql="UPDATE users
@@ -80,6 +107,8 @@ class s_read_uids extends a_sub_handler_ra {
 		$this->db->db_query($sql);
 
 		$o_juick=new c_juick();
+		echo "START ";
+
 		$out_xmls=array();
 		foreach ($block_users as $block){
 			$out_xmls[]=$o_juick->make_xml_uid_by_uname($block);
@@ -88,14 +117,9 @@ class s_read_uids extends a_sub_handler_ra {
 	  $res=$o_juick->send_xmls($out_xmls);
 
 		if (!is_array($res)){
-			echo 'not array $res';
-			echo "\n<BR/>";
+			echo 'not array $res'."\n<BR/>";
 			print_r($res);
-			echo "\n<BR/>";
-			echo '  last query:'; print_r($out_xmls);
-			echo "\n<BR/>";
-			echo '  last ansver:'; print_r($o_juick->con->last_input_xml);
-			echo "\n<BR/>";
+			$this->handler->answer_error(0, $o_juick, array(), $out_xmls, false);
 		}
 		else {
 			foreach ($res as $one_res){
@@ -106,26 +130,31 @@ class s_read_uids extends a_sub_handler_ra {
 					echo 'not array $unames';
 					echo "\n<BR/>";
 					print_r($one_res);
-					echo "\n<BR/>";
-					echo '  last query:'; print_r($out_xmls);
-					echo "\n<BR/>";
-					echo '  last ansver:'; print_r($o_juick->con->last_input_xml);
-					echo "\n<BR/>";
+					$this->handler->answer_error(0, $o_juick, array(), $out_xmls, false);
 				}
 				else {
 					foreach ($unames as $k=>$cur_uname){
 						$s_uname=tosql($cur_uname);
 						$s_uid=tosql($uids[$k]);
+						unset($s_unames[$cur_uname]);
 
 						$sql="UPDATE users
 						      SET uid=$s_uid
 									WHERE uname=$s_uname";
 						$this->db->db_query($sql);
 					}
+
+					if (!empty($s_unames)){
+						//оставшиеся которые не разрезолвились
+						$this->delete_unames($s_unames);
+					}
 				}
 			}
 		}
 		$o_juick->disconnect();
+
+		echo " END";
+		exit;
 	}
 
 	function ajax_process(){

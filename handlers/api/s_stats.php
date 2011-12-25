@@ -52,7 +52,7 @@ class s_stats extends a_sub_handler_ra {
           FROM users
           WHERE uname=$s_login";
     $res=$this->db->get_array_first_record($sql);
-    if ($res==null){
+    if (empty($res['uid'])){
       $sql="INSERT IGNORE INTO users
             (uname, first_date, last_date, count_show)
           VALUES

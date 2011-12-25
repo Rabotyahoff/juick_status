@@ -2,3 +2,5 @@
 /.buildpath
 /.settings
 /!server
+/_settings.xml
+/.gitignore

@@ -9,42 +9,70 @@ load_class_local('c_juick');
 
 class s_read_messages extends a_sub_handler_ra {
 
-	protected $limit_users_messages=10;
+	/**
+	 *
+	 * @var p_cron
+	 */
+	public $handler;
+
+	protected $limit=20;
 
 	function delete_empty_messages(){
 		$sql="DELETE FROM messages WHERE tags='' AND body='' AND date_import<CURDATE()";
 		$this->db->db_query($sql);
 	}
 
-	function read_messages(){
-		$this->delete_empty_messages();
-
-		$sql="SELECT
+	function get_uids(){
+		/*$sql="SELECT
 						u.uid, max(m.mid) mid
 					FROM users u
 						LEFT JOIN messages m USING(uid)
 					WHERE u.uid is NOT NULL
 					GROUP BY u.uid
 					ORDER BY m.date_import ASC
-					LIMIT ".$this->limit_users_messages;
+					LIMIT ".$this->limit;*/
+
+		$sql="SELECT
+		 				u.uid, max(m.mid) mid
+					FROM users u
+					  LEFT JOIN messages m USING(uid)
+					WHERE u.uid is NOT NULL
+					GROUP BY u.uid
+					ORDER BY u.last_messages
+					LIMIT ".$this->limit;
+
 		$res=$this->db->get_array($sql);
+		return $res;
+	}
+
+	function read_messages(){
+		$this->delete_empty_messages();
+		$res=$this->get_uids();
+
 		if(empty($res)){
 			echo 'empty list.';
-			return;
+			exit;
 		}
 
-		$o_juick=new c_juick();
+		//print_r($res);
 
+		$o_juick=new c_juick();
+		$s_uids=array();
+
+		echo "START ";
 		foreach ($res as $itm){
-			$xml=$o_juick->make_xml_messages($itm['uid'], $itm['mid']);
+			$uid=$itm['uid'];
+			$s_uid=tosql($uid);
+			$s_uids[]=$s_uid;
+
+			$xml=$o_juick->make_xml_messages($uid, $itm['mid']);
 			$res_juick=$o_juick->send($xml);
 			$res_juick=$res_juick[0];
 			//print_r($res_juick);
 
-			$s_uid=tosql($itm['uid']);
 			if (count($res_juick)==0) {
 				//дабы без сообщений не обрабатывались вечно
-				$sql="INSERT INTO messages
+				/*$sql="INSERT INTO messages
 								(uid, mid, date, tags, body, date_import)
 							VALUES
 								($s_uid, 0, NOW(), '', '', NOW())
@@ -53,7 +81,7 @@ class s_read_messages extends a_sub_handler_ra {
 								tags='',
 								body='',
 								date_import=NOW()";
-				$this->db->db_query($sql);
+				$this->db->db_query($sql);*/
 				continue;
 			}
 
@@ -63,17 +91,8 @@ class s_read_messages extends a_sub_handler_ra {
 					continue;
 				}
 
-				if ($line['pak_id']!=$itm['uid']){
-					echo '  error on pak_id. We need "'.$itm['uid'].'" but we have "'.$line['pak_id'].'"'."\n<BR/>";
-					echo '  result:'; print_r($o_juick->res);
-					echo "\n<BR/>";
-					echo '  last query:'; print_r($xml);
-					echo "\n<BR/>";
-					echo '  last ansver:'; print_r($o_juick->con->last_input_xml);
-					echo "\n<BR/>";
-
-					echo "\n<BR/>";
-					echo '  CONTINUE!'."\n<BR/>";
+				if ($line['pak_id']!=$uid){
+					$this->handler->answer_error($uid, $o_juick, $res_juick, $xml, false);
 					continue;
 				}
 
@@ -103,6 +122,16 @@ class s_read_messages extends a_sub_handler_ra {
 		}
 
 		$o_juick->disconnect();
+
+		$s_uids=implode(',',$s_uids);
+		$sql="UPDATE users
+						SET last_messages=NOW()
+					WHERE uid IN ($s_uids)";
+		//echo " $sql ";
+		$this->db->db_query($sql);
+
+		echo " END";
+		exit;
 	}
 
 	function ajax_process(){

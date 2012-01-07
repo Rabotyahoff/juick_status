@@ -50,7 +50,9 @@
 						&#160;&#160;&#160;
 						<xsl:for-each select="category">
 							*<xsl:value-of select="."/><xsl:text> </xsl:text>
-						</xsl:for-each>       
+						</xsl:for-each>
+	  				
+	  				<div id="id_link" style="float: right; color: rgb(200, 200, 200);"><xsl:value-of select="//current_url"/></div>
 					</div>			
 				</xsl:for-each>
 				
@@ -63,6 +65,10 @@
 		
 		<script src="{$res_site_url}js/common.js"/>
 		<script src="{$res_site_url}js/trackbar.js"/>
+		
+		<script>
+			cur_page.current_url='<xsl:value-of select="//current_url"/>';
+		</script>
 		
 		<div style="width: 800px">
 			<div style="text-align: center;">
@@ -186,6 +192,14 @@
 						roundUp: 5
 						});        
 					</script>
+					
+					
+					<div>
+						<label>
+							<input id="id_inp_link" type="checkbox" name="is_show_link" value="1" checked="checked" style="margin-left: 0px;" onclick="cur_page.changeVisLink()"/>
+							<xsl:text> with link</xsl:text>
+						</label>
+					</div>
 				</div>
 				<div style="clear:both"></div>
 			</div>

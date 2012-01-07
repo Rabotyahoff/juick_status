@@ -1,11 +1,15 @@
 var cur_page = {
   /*Begin properties*/
+  current_url: 'http://juick.ra-project.net/',    
+    
   rr: '',
   gg: '',
   bb: '',
   
   width0: '',
   height0: '',
+  
+  is_show_link: true,
   /*End properties*/
   
   get_login: function(is_real){
@@ -48,6 +52,19 @@ var cur_page = {
       $("#id_div_result").css('display', 'none');
       $("#id_btn_result").css('visibility', 'hidden');
     }    
+  },
+  
+  changeVisLink: function(){
+    if ($('#id_inp_link').attr('checked')) {
+      $('#id_link').show();
+      this.is_show_link=true;
+    }
+    else {
+      $('#id_link').hide();
+      this.is_show_link=false;
+    }
+    
+    this.show_links();
   },
   
   get_juick_data: function (){
@@ -120,11 +137,21 @@ var cur_page = {
     else {
       if (is_change_color) $("#id_btn_result").css('visibility', 'visible');
     }
-    var login=this.get_login(false);
+    
+    this.show_links();
+  },
   
+  show_links: function(){
+    var login=this.get_login(false);    
     res_color=this.get_bg_color('');
-    $("#id_inp_bb").val('[url=http://juick.com/'+login+'/][img]http://juick.ra-project.net/'+res_color+'_'+this.width0+'x'+this.height0+'/'+login+'.png[/img][/url]');
-    $("#id_inp_html").val('<a href="http://juick.com/'+login+'/"><img src="http://juick.ra-project.net/'+res_color+'_'+this.width0+'x'+this.height0+'/'+login+'.png"></a>');
+    
+    var add_link='';
+    if (!this.is_show_link) add_link='x_nolnk';
+    
+    var add_params=add_link;
+      
+    $("#id_inp_bb").val('[url=http://juick.com/'+login+'/][img]'+this.current_url+res_color+'_'+this.width0+'x'+this.height0+add_params+'/'+login+'.png[/img][/url]');
+    $("#id_inp_html").val('<a href="http://juick.com/'+login+'/"><img src="'+this.current_url+res_color+'_'+this.width0+'x'+this.height0+add_params+'/'+login+'.png"></a>');    
   },
 
   uncheck: function (){

@@ -75,7 +75,7 @@ class p_show extends a_handler_ra {
     return $res;
   }
 
-  function make_pic($login, $bg_color, $image_width, $image_height, $is_transparent){
+  function make_pic($login, $bg_color, $image_width, $image_height, $is_transparent, $is_whith_link){
     $m_posts=new m_posts();
     $rss=$m_posts->user_posts($login);
 
@@ -207,13 +207,17 @@ class p_show extends a_handler_ra {
     $bottom_text_right=$bottom_text_length+2*$border_lr;
     ImageTTFText($im, 8, 0, $border_lr, $image_height-$border_tb, $date_color, 'arial.ttf', c_graph::utf8_to_uni($text));
 
-    $gray=imagecolorallocate($im, 200, 200, 200);
-    $my_txt="http://juick.ra-project.net";
-    $tmp_width=$this->get_str_len_on_picture($my_txt, 7);
-    $tmp_left=$image_width-$tmp_width-$border_lr;
-    //выводить не будем, если не помещается
-    if ($tmp_left>=$bottom_text_right){
-      ImageTTFText($im, 7, 0, 291, $image_height-$border_tb-1, $gray, 'arial.ttf', c_graph::utf8_to_uni($my_txt));
+    if ($is_whith_link){
+    	global $o_global;
+	    $gray=imagecolorallocate($im, 200, 200, 200);
+	    $my_txt=$o_global->site_root_url;//"http://juick.ra-project.net";
+	    $tmp_width=$this->get_str_len_on_picture($my_txt, 7);
+	    $tmp_left=$image_width-$tmp_width-$border_lr;
+	    //echo $tmp_left;die;
+	    //выводить не будем, если не помещается
+	    if ($tmp_left>=$bottom_text_right){
+	      ImageTTFText($im, 7, 0, $tmp_left, $image_height-$border_tb-1, $gray, 'arial.ttf', c_graph::utf8_to_uni($my_txt));
+	    }
     }
 
     if (!$is_show_attach){
@@ -256,6 +260,7 @@ class p_show extends a_handler_ra {
     $image_height=$tmp[1];
     if (empty($image_width)) $image_width=$this->def_image_width;
     if (empty($image_height)) $image_height=$this->def_image_height;
+    $is_whith_link=!isset($tmp[2]);
 
     if ($image_width<$this->min_image_width) $image_width=$this->min_image_width;
     if ($image_height<$this->min_image_height) $image_height=$this->min_image_height;
@@ -267,7 +272,7 @@ class p_show extends a_handler_ra {
     $hash=$o_cache->make_hash(array('pic',$login,$bg));
     $res=$o_cache->get($hash);
     if ($res===false){
-      $im=$this->make_pic($login, $bg_color, $image_width, $image_height, $is_transparent);
+      $im=$this->make_pic($login, $bg_color, $image_width, $image_height, $is_transparent, $is_whith_link);
       $o_cache->set_img($hash, $im, $ext);
       @imagedestroy($im);
       $res=$o_cache->get($hash);

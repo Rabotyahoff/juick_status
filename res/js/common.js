@@ -44,8 +44,12 @@ var cur_page = {
       jobj_img.attr('height', this.height0);
       //jobj_img.src='/res/img/load.gif';
       jobj_img.src='/res/img/empty.png';
+      
+      var add_link='';
+      if (!this.is_show_link) add_link='x_nolnk';
+      var add_params=add_link;      
   
-      var res_src=this.get_bg_color('')+'_'+this.width0+'x'+this.height0 + '/' + login + '.png';
+      var res_src=this.get_bg_color('')+'_'+this.width0+'x'+this.height0 +add_params+ '/' + login + '.png';
       jobj_img.attr('src',res_src);
       jobj_img.css('display','block');
   
@@ -80,6 +84,7 @@ var cur_page = {
         if (data!='error' && data!=''){
           $('#id_div_result').html(data);
           this_obj.setColor();
+          this_obj.changeVisLink();
         }
       });
     }
